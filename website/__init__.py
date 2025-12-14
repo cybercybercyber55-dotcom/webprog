@@ -30,22 +30,27 @@ def create_app():
     app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", "dev-secret")
 
     # ---------------------------------------
-    # DATABASE CONFIG (SET BEFORE init_app)
+    # DATABASE CONFIG
     # ---------------------------------------
-    POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
-    POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
-    POSTGRES_DB = os.getenv("POSTGRES_DB", "postgres")
-    POSTGRES_HOST = os.getenv("POSTGRES_HOST", "db")
+    POSTGRES_USER = os.getenv("POSTGRES_USER")
+    POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+    POSTGRES_DB = os.getenv("POSTGRES_DB")
+    POSTGRES_HOST = os.getenv("POSTGRES_HOST")
     POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@"
-        f"{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
-    )
+    # Fallback for local SQLite when no DB is provided
+    if POSTGRES_USER and POSTGRES_PASSWORD and POSTGRES_DB:
+        app.config["SQLALCHEMY_DATABASE_URI"] = (
+            f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@"
+            f"{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+        )
+    else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///local.db"
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # ---------------------------------------
-    # INIT EXTENSIONS (AFTER CONFIG)
+    # INIT EXTENSIONS
     # ---------------------------------------
     db.init_app(app)
     mail.init_app(app)
@@ -62,7 +67,7 @@ def create_app():
     app.register_blueprint(auth)
 
     # ---------------------------------------
-    # DATABASE TABLES
+    # DATABASE TABLE CREATION (safe for Render)
     # ---------------------------------------
     from .models import User
 
