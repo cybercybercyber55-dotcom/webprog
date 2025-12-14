@@ -8,13 +8,13 @@ from flask_mail import Mail
 from dotenv import load_dotenv
 
 # ---------------------------------------
-# Load .env
+# Load .env (local development only)
 # ---------------------------------------
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 load_dotenv(os.path.join(base_dir, ".env"))
 
 # ---------------------------------------
-# Extensions (global)
+# Extensions
 # ---------------------------------------
 db = SQLAlchemy()
 mail = Mail()
@@ -30,21 +30,22 @@ def create_app():
     app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", "dev-secret")
 
     # ---------------------------------------
-    # DATABASE CONFIG
+    # DATABASE CONFIG (Neon / Render)
     # ---------------------------------------
-    POSTGRES_USER = os.getenv("POSTGRES_USER")
-    POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-    POSTGRES_DB = os.getenv("POSTGRES_DB")
-    POSTGRES_HOST = os.getenv("POSTGRES_HOST")
-    POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
+    db_url = os.getenv("DATABASE_URL")  # Render or Neon
 
-    # Fallback for local SQLite when no DB is provided
-    if POSTGRES_USER and POSTGRES_PASSWORD and POSTGRES_DB:
-        app.config["SQLALCHEMY_DATABASE_URI"] = (
-            f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@"
-            f"{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
-        )
+    if db_url:
+        # Render/Neon sometimes give "postgres://" which SQLAlchemy rejects
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+        # Neon/Postgres requires SSL
+        if "sslmode" not in db_url:
+            db_url += "?sslmode=require"
+
+        app.config["SQLALCHEMY_DATABASE_URI"] = db_url
     else:
+        # Local fallback if no external DB connected
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///local.db"
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -58,7 +59,7 @@ def create_app():
     login_manager.login_view = "auth.login"
 
     # ---------------------------------------
-    # BLUEPRINTS
+    # REGISTER BLUEPRINTS
     # ---------------------------------------
     from .views import views
     from .auth import auth
@@ -69,9 +70,8 @@ def create_app():
     # ---------------------------------------
     # DATABASE TABLE CREATION (safe for Render)
     # ---------------------------------------
-    from .models import User
-
     with app.app_context():
+        from .models import User
         db.create_all()
 
     # ---------------------------------------
