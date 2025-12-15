@@ -24,3 +24,19 @@ function refreshCaptcha() {
   img.dataset.baseUrl = baseUrl;
   img.src = baseUrl + '?t=' + Date.now(); // cache-buster
 }
+
+const sidebar = document.querySelector(".admin-sidebar");
+const overlay = document.createElement("div");
+overlay.classList.add("sidebar-overlay");
+document.body.appendChild(overlay);
+
+document.querySelector(".navbar-toggler").addEventListener("click", () => {
+    sidebar.classList.toggle("active");
+    overlay.classList.toggle("active");
+});
+
+// Close sidebar when clicking outside
+overlay.addEventListener("click", () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+});
