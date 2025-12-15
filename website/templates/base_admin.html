@@ -31,25 +31,46 @@
   <title>{% block title %}Admin - Inventory System{% endblock %}</title>
 </head>
 <body class="bg-light">
-  <!-- Top bar (green) -->
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background:#047857;">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('views.home') }}">
-        <strong>Inventory</strong> System
-      </a>
-      
-      <div class="ms-auto d-flex align-items-center text-white">
-        <i class="fa fa-user-circle me-2"></i>
-        <span>{{ user.first_name or 'Admin' }}</span>
-        <button
-        class="btn btn-sm btn-outline-light ms-3"
-        data-bs-toggle="modal"
-        data-bs-target="#logoutModal"
-        >
-        Logout
-      </button>
-      
+  <!-- Top Navbar (Responsive) -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background:#047857;">
+  <div class="container-fluid">
+
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold" href="{{ url_for('views.home') }}">
+      Inventory System
+    </a>
+
+    <!-- Hamburger toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminTopNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse justify-content-end" id="adminTopNav">
+      <ul class="navbar-nav align-items-center">
+
+        <!-- Username -->
+        <li class="nav-item me-2">
+          <span class="nav-link text-white">
+            <i class="fa fa-user-circle me-1"></i>
+            {{ user.first_name or 'Admin' }}
+          </span>
+        </li>
+
+        <!-- Logout Button -->
+        <li class="nav-item">
+          <button 
+            class="btn btn-outline-light btn-sm" 
+            data-bs-toggle="modal" 
+            data-bs-target="#logoutModal"
+          >
+            Logout
+          </button>
+        </li>
+
+      </ul>
     </div>
+
   </div>
 </nav>
 
