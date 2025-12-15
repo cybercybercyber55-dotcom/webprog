@@ -215,3 +215,61 @@
 }
 
 /* end new side bar setting */
+
+/* ----------------------------------------------------
+   MOBILE RESPONSIVE FIX FOR NAVBAR + SIDEBAR
+---------------------------------------------------- */
+
+/* Hide sidebar on small screens */
+@media (max-width: 992px) {
+    .admin-sidebar {
+        position: fixed;
+        top: 56px; /* height of navbar */
+        left: -260px; /* hidden */
+        width: 260px;
+        height: 100vh;
+        background: #1f2937;
+        z-index: 2000;
+        transition: 0.3s ease;
+    }
+
+    /* When sidebar is open */
+    .admin-sidebar.active {
+        left: 0;
+    }
+
+    /* Main content should use full width */
+    .admin-content {
+        width: 100%;
+        padding: 16px;
+    }
+
+    /* Navbar must stack neatly */
+    .navbar-brand {
+        font-size: 16px;
+        white-space: nowrap;
+    }
+
+    /* Fix navbar items from overflowing */
+    .navbar-nav .nav-link,
+    .navbar-nav .btn {
+        font-size: 14px !important;
+        margin-top: 5px;
+    }
+}
+
+/* Dark overlay when sidebar is open */
+.sidebar-overlay {
+    display: none;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: 1500;
+}
