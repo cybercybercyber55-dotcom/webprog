@@ -621,8 +621,8 @@ def customer_list():
 @views.route("/admin/customers/new", methods=["POST"])
 @login_required
 def customer_create():
-    if not current_user.is_admin:
-        abort(403)
+    # if not current_user.is_admin:
+    #     abort(403)
 
     name = (request.form.get("name") or "").strip()
     address = (request.form.get("address") or "").strip()
@@ -696,8 +696,8 @@ def customer_edit(customer_id):
 @views.route("/admin/customers/<int:customer_id>/delete", methods=["POST"])
 @login_required
 def customer_delete(customer_id):
-    if not current_user.is_admin:
-        abort(403)
+    # if not current_user.is_admin:
+    #     abort(403)
 
     customer = Customer.query.get_or_404(customer_id)
 
@@ -1243,8 +1243,8 @@ def outgoing_list():
 @views.route("/admin/outgoing/new", methods=["POST"])
 @login_required
 def outgoing_create():
-    if not current_user.is_admin:
-        abort(403)
+    # if not current_user.is_admin:
+    #     abort(403)
 
     product_id = request.form.get("product_id", type=int)
     customer_id = request.form.get("customer_id", type=int)
@@ -1300,8 +1300,8 @@ def outgoing_create():
 @views.route("/admin/outgoing/<int:outgoing_id>/edit", methods=["POST"])
 @login_required
 def outgoing_edit(outgoing_id):
-    if not current_user.is_admin:
-        abort(403)
+    # if not current_user.is_admin:
+    #     abort(403)
 
     record = Outgoing.query.get_or_404(outgoing_id)
 
@@ -1354,8 +1354,8 @@ def outgoing_edit(outgoing_id):
 @views.route("/admin/outgoing/<int:outgoing_id>/delete", methods=["POST"])
 @login_required
 def outgoing_delete(outgoing_id):
-    if not current_user.is_admin:
-        abort(403)
+    # if not current_user.is_admin:
+    #     abort(403)
 
     record = Outgoing.query.get_or_404(outgoing_id)
     db.session.delete(record)
@@ -1470,8 +1470,8 @@ def outgoing_export_pdf():
 @views.route("/admin/outgoing/<int:outgoing_id>/invoice")
 @login_required
 def outgoing_invoice(outgoing_id):
-    if not current_user.is_admin:
-        abort(403)
+    # if not current_user.is_admin:
+    #     abort(403)
 
     o = Outgoing.query.get_or_404(outgoing_id)
 
@@ -1540,8 +1540,8 @@ def outgoing_invoice(outgoing_id):
 @views.route("/admin/purchases")
 @login_required
 def purchase_list():
-    if not current_user.is_admin:
-        abort(403)
+    # if not current_user.is_admin:
+    #     abort(403)
 
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 10, type=int)
@@ -1581,8 +1581,8 @@ def purchase_list():
 @views.route("/admin/purchases/new", methods=["POST"])
 @login_required
 def purchase_create():
-    if not current_user.is_admin:
-        abort(403)
+    # if not current_user.is_admin:
+    #     abort(403)
 
     product_id = request.form.get("product_id")
     supplier_id = request.form.get("supplier_id")
@@ -1642,8 +1642,8 @@ def purchase_create():
 @views.route("/admin/purchases/<int:purchase_id>/edit", methods=["POST"])
 @login_required
 def purchase_edit(purchase_id):
-    if not current_user.is_admin:
-        abort(403)
+    # if not current_user.is_admin:
+    #     abort(403)
 
     purchase = Purchase.query.get_or_404(purchase_id)
 
@@ -1712,8 +1712,8 @@ def purchase_edit(purchase_id):
 @views.route("/admin/purchases/<int:purchase_id>/delete", methods=["POST"])
 @login_required
 def purchase_delete(purchase_id):
-    if not current_user.is_admin:
-        abort(403)
+    # if not current_user.is_admin:
+    #     abort(403)
 
     purchase = Purchase.query.get_or_404(purchase_id)
 
@@ -1802,8 +1802,8 @@ def purchases_export_excel():
 @views.route("/admin/purchases/<int:purchase_id>/invoice/pdf")
 @login_required
 def purchase_invoice_pdf(purchase_id):
-    if not current_user.is_admin:
-        abort(403)
+    # if not current_user.is_admin:
+    #     abort(403)
 
     p = Purchase.query.get_or_404(purchase_id)
 
